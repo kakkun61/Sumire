@@ -2,8 +2,14 @@ package kakkun61.sumire;
 
 import java.util.List;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
+
 public class GlobalData {
-    private static final int DEFAULT_DAY_LESSONS_COUNT = 5; 
+    private static SharedPreferences prefs;
+    private static final int DEFAULT_DAY_LESSONS_COUNT = 5;
     private static int dayLessonsCount;
     public static final int SUNDAY    = 0;
     public static final int MONDAY    = 1;
@@ -29,7 +35,12 @@ public class GlobalData {
         dayLessonsCount = DEFAULT_DAY_LESSONS_COUNT;
         businessDay = new boolean[] { true, true, true, true, true, true, false };
         lessons = new Lesson[7][];
-        lessons[0] = new Lesson[] { null, null, new Lesson("パワーエレクトロニクス", "森本", "B11 324", 1), null, null };
+        lessons[0] = new Lesson[] {
+                new Lesson("制御工学", "真田", "B11 324", 1),
+                null,
+                new Lesson("パワーエレクトロニクス", "森本", "B11 324", 1),
+                null,
+                null };
         showingDay = MONDAY;
     }
 
@@ -37,6 +48,10 @@ public class GlobalData {
      * インスタンスは作らせない
      */
     private GlobalData() {}
+
+    public static void createDefaultSharedPreferences(Context context) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    }
 
     /**
      * 
