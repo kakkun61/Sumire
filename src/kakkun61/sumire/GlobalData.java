@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
 
 public class GlobalData {
     private static SharedPreferences prefs;
-    private static final int DEFAULT_DAY_LESSONS_COUNT = 5;
+    public static final int DEFAULT_DAY_LESSONS_COUNT = 5;
     private static int dayLessonsCount;
     public static final int SUNDAY    = 0;
     public static final int MONDAY    = 1;
@@ -55,13 +55,10 @@ public class GlobalData {
 
     /**
      * 
-     * @param dayLessonsCount 0 でデフォルト値に戻す。
+     * @param dayLessonsCount must be >= 1
      */
     public static void setDayLessonsCount(int dayLessonsCount) {
-        if (dayLessonsCount == 0)
-            GlobalData.dayLessonsCount = DEFAULT_DAY_LESSONS_COUNT;
-        else
-            GlobalData.dayLessonsCount = dayLessonsCount;
+    	GlobalData.dayLessonsCount = dayLessonsCount;
     }
 
     public static int getDayLessonsCount() {

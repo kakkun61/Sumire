@@ -52,7 +52,6 @@ public class Main extends Activity {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setGravity(Gravity.CENTER_HORIZONTAL);
         layout.setBackgroundColor(Color.BLUE);
-        layout.setOnClickListener(new LessonClickListener());
 
         TextView begin = new TextView(this);
         begin.setText("12:55");
@@ -111,8 +110,8 @@ public class Main extends Activity {
         }
 //        return null;
         View v = new TextView(this);
+        v.setOnClickListener(new LessonClickListener());
         v.setBackgroundColor(Color.GREEN);
         return v;
     }
-
 }
