@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="lesson_dialog_alart_items_new">
+		<item>New</item>
+	</string-array>
+</resources>

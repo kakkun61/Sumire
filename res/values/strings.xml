@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, Main!</string>
     <string name="app_name">Sumire</string>
+    <string name="lesson_dialog_alart_title_new">New</string>
+    <string name="negative">Cancel</string>
 </resources>

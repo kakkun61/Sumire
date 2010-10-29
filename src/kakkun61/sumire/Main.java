@@ -1,18 +1,12 @@
 package kakkun61.sumire;
 
-import kakkun61.sumire.util.SumireLog;
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -27,14 +21,14 @@ public class Main extends Activity {
         Lesson[][] lessons = GlobalData.getLessons();
         int day = GlobalData.SUNDAY;
         TableLayout table = (TableLayout)findViewById(R.id.talbe);
-        for (int i=0; i<GlobalData.getDayLessonsCount(); i++) {
+        for (int hour=0; hour<GlobalData.getDayLessonsCount(); hour++) {
             TableRow row = new TableRow(this);
             row.setBackgroundColor(Color.CYAN);
             TableRow.LayoutParams params = new TableRow.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
             params.weight = 0;
             params.setMargins(5, 2, 2, 2);
-            row.addView(createLeftCell(i), params);
-            View v = createRightCell(i, lessons[day][i]);
+            row.addView(createLeftCell(hour), params);
+            View v = createRightCell(lessons[day][hour], day, hour);
             if (v != null) {
                 params.weight = 1;
                 params.setMargins(2, 2, 2, 5);
@@ -46,7 +40,7 @@ public class Main extends Activity {
         }
     }
 
-    private View createLeftCell(int i) {
+    private View createLeftCell(int day) {
 //        SumireLog.d("call Main.createLeftCell(" + i + ")");
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -62,7 +56,7 @@ public class Main extends Activity {
         layout.addView(begin, params);
 
         TextView hour = new TextView(this);
-        hour.setText(String.valueOf(i));
+        hour.setText(String.valueOf(day));
         hour.setGravity(Gravity.CENTER);
         hour.setBackgroundColor(Color.GREEN);
         params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -80,12 +74,12 @@ public class Main extends Activity {
         return layout;
     }
 
-    private View createRightCell(int i, Lesson lesson) {
+    private View createRightCell(Lesson lesson, int day, int hour) {
 //        SumireLog.d("call Main.createRightCell(" + i + ", " + (lesson==null? "null": lesson.name) +  ")");
         if (lesson != null) {
             LinearLayout layout = new LinearLayout(this);
             layout.setOrientation(LinearLayout.VERTICAL);
-            layout.setOnClickListener(new LessonClickListener());
+            layout.setOnClickListener(new LessonClickListener(lesson, hour, hour));
             layout.setBackgroundColor(Color.BLUE);
 
             TextView name = new TextView(this);
@@ -110,7 +104,7 @@ public class Main extends Activity {
         }
 //        return null;
         View v = new TextView(this);
-        v.setOnClickListener(new LessonClickListener());
+        v.setOnClickListener(new LessonClickListener(null, hour, hour));
         v.setBackgroundColor(Color.GREEN);
         return v;
     }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">すみれ</string>
+    <string name="lesson_dialog_alart_title_new">新規</string>
+    <string name="negative">キャンセル</string>
+</resources>
