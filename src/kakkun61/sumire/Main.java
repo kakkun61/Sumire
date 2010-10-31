@@ -21,10 +21,14 @@ public class Main extends Activity {
         Lesson[][] lessons = GlobalData.getLessons();
         int day = GlobalData.SUNDAY;
         TableLayout table = (TableLayout)findViewById(R.id.talbe);
+        TableLayout.LayoutParams tlParams = new TableLayout.LayoutParams();
+        tlParams.height = LayoutParams.FILL_PARENT;
+        tlParams.weight = 1;
         for (int hour=0; hour<GlobalData.getDayLessonsCount(); hour++) {
             TableRow row = new TableRow(this);
             row.setBackgroundColor(Color.CYAN);
             TableRow.LayoutParams params = new TableRow.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+            params.gravity = Gravity.CENTER_VERTICAL;
             params.weight = 0;
             params.setMargins(5, 2, 2, 2);
             row.addView(createLeftCell(hour), params);
@@ -34,8 +38,6 @@ public class Main extends Activity {
                 params.setMargins(2, 2, 2, 5);
                 row.addView(v, params);
             }
-            TableLayout.LayoutParams tlParams = new TableLayout.LayoutParams();
-            tlParams.height = LayoutParams.WRAP_CONTENT;
             table.addView(row, tlParams);
         }
     }
@@ -79,7 +81,7 @@ public class Main extends Activity {
         if (lesson != null) {
             LinearLayout layout = new LinearLayout(this);
             layout.setOrientation(LinearLayout.VERTICAL);
-            layout.setOnClickListener(new LessonClickListener(lesson, hour, hour));
+            layout.setOnClickListener(new LessonClickListener(lesson, day, hour));
             layout.setBackgroundColor(Color.BLUE);
 
             TextView name = new TextView(this);
@@ -103,8 +105,8 @@ public class Main extends Activity {
             return layout;
         }
 //        return null;
-        View v = new TextView(this);
-        v.setOnClickListener(new LessonClickListener(null, hour, hour));
+        View v = new View(this);
+        v.setOnClickListener(new LessonClickListener(null, day, hour));
         v.setBackgroundColor(Color.GREEN);
         return v;
     }
