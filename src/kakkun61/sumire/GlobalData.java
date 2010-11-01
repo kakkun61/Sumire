@@ -1,5 +1,6 @@
 package kakkun61.sumire;
 
+import java.io.IOException;
 import java.util.List;
 
 import android.content.Context;
@@ -53,24 +54,20 @@ public class GlobalData {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    /**
-     * 
-     * @param dayLessonsCount must be >= 1
-     */
-    public static void setDayLessonsCount(int dayLessonsCount) {
-    	GlobalData.dayLessonsCount = dayLessonsCount;
+    public static Lesson getLesson(int day, int hour) {
+        return lessons[day][hour];
     }
 
-    public static int getDayLessonsCount() {
-        return dayLessonsCount;
-    }
-
-    public static Lesson[][] getLessons() {
-        return lessons;
-    }
-
-    public static void setLessons(Lesson[][] lessons) {
-        GlobalData.lessons = lessons;
+    public static void setLesson(int day, int hour, Lesson lesson) {
+        lessons[day][hour] = lesson;
+        SharedPreferences.Editor edit = prefs.edit();
+        if (lessons[day][hour] != null) {
+            edit.putString("lessons" + day + hour + "name", lessons[day][hour].name);
+            edit.putString("lessons" + day + hour + "teacher", lessons[day][hour].teacher);
+            edit.putString("lessons" + day + hour + "room", lessons[day][hour].room);
+            edit.putInt("lessons" + day + hour + "series", lessons[day][hour].series);
+        }
+        edit.commit();
     }
 
     /**
@@ -87,6 +84,10 @@ public class GlobalData {
      */
     public static void setBusinessDay(boolean[] businessDay) {
         GlobalData.businessDay = businessDay;
+        SharedPreferences.Editor edit = prefs.edit();
+        for (int i=0; i<7; i++) {
+            edit.putBoolean("businessDay" + i, businessDay[i]);
+        }
     }
 
     public static int getShowingDay() {
@@ -95,5 +96,46 @@ public class GlobalData {
 
     public static void setShowingDay(int showingDay) {
         GlobalData.showingDay = showingDay;
+    }
+
+    public static void setDayLessonsCount(int dayLessonsCount) {
+        GlobalData.dayLessonsCount = dayLessonsCount;
+        prefs.edit().putInt("dayLessonsCount", dayLessonsCount).commit();
+        
+    }
+
+    public static int getDayLessonsCount() {
+        return dayLessonsCount;
+    }
+
+    /**
+     * Call after {@link GlobalData#createDefaultSharedPreferences(Context)}.
+     */
+    public static void loadAllData() {
+        dayLessonsCount = prefs.getInt("dayLessonsCount", DEFAULT_DAY_LESSONS_COUNT);
+        showingDay = prefs.getInt("showingDay", MONDAY);
+
+        for (int day=0; day<7; day++) {
+            if (day == SUNDAY || day == SATURDAY)
+                prefs.getBoolean("businessDay" + day, false);
+            else
+                prefs.getBoolean("businessDay" + day, true);
+        }
+
+        lessons = new Lesson[7][];
+        for (int day=0; day<7; day++) {
+            lessons[day] = new Lesson[dayLessonsCount];
+            for (int hour=0; hour<dayLessonsCount; hour++) {
+                String name = prefs.getString("lessons" + day + hour + "name", null);
+                if (name == null)
+                    continue;
+                lessons[day][hour] = new Lesson(
+                        name, 
+                        prefs.getString("lessons" + day + hour + "teacher", null),
+                        prefs.getString("lessons" + day + hour + "room", null),
+                        prefs.getInt("lessons" + day + hour + "series", 0)
+                );
+            }
+        }
     }
 }

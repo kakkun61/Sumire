@@ -17,8 +17,8 @@ public class Main extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GlobalData.createDefaultSharedPreferences(this);
+        GlobalData.loadAllData();
         setContentView(R.layout.main);
-        Lesson[][] lessons = GlobalData.getLessons();
         int day = GlobalData.SUNDAY;
         TableLayout table = (TableLayout)findViewById(R.id.talbe);
         TableLayout.LayoutParams tlParams = new TableLayout.LayoutParams();
@@ -32,7 +32,7 @@ public class Main extends Activity {
             params.weight = 0;
             params.setMargins(5, 2, 2, 2);
             row.addView(createLeftCell(hour), params);
-            View v = createRightCell(lessons[day][hour], day, hour);
+            View v = createRightCell(day, hour);
             if (v != null) {
                 params.weight = 1;
                 params.setMargins(2, 2, 2, 5);
@@ -76,14 +76,16 @@ public class Main extends Activity {
         return layout;
     }
 
-    private View createRightCell(Lesson lesson, int day, int hour) {
+    // FIXME このあたりにバグのにおい
+    private View createRightCell(int day, int hour) {
 //        SumireLog.d("call Main.createRightCell(" + i + ", " + (lesson==null? "null": lesson.name) +  ")");
-        if (lesson != null) {
-            LinearLayout layout = new LinearLayout(this);
-            layout.setOrientation(LinearLayout.VERTICAL);
-            layout.setOnClickListener(new LessonClickListener(lesson, day, hour));
-            layout.setBackgroundColor(Color.BLUE);
+        Lesson lesson = GlobalData.getLesson(day, hour);
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setOnClickListener(new LessonClickListener(lesson, day, hour, layout));
+        layout.setBackgroundColor(Color.BLUE);
 
+        if (lesson != null) {
             TextView name = new TextView(this);
             name.setTextSize(20);
             name.setText(lesson.name);
@@ -101,13 +103,13 @@ public class Main extends Activity {
             room.setText(lesson.room);
             room.setBackgroundColor(Color.GREEN);
             layout.addView(room);
-
-            return layout;
         }
-//        return null;
-        View v = new View(this);
-        v.setOnClickListener(new LessonClickListener(null, day, hour));
-        v.setBackgroundColor(Color.GREEN);
-        return v;
+
+        return layout;
+
+//        View v = new View(this);
+//        v.setOnClickListener(new LessonClickListener(null, day, hour, null));
+//        v.setBackgroundColor(Color.GREEN);
+//        return v;
     }
 }
