@@ -21,9 +21,6 @@ public class Main extends Activity {
         setContentView(R.layout.main);
         int day = GlobalData.SUNDAY;
         TableLayout table = (TableLayout)findViewById(R.id.talbe);
-        TableLayout.LayoutParams tlParams = new TableLayout.LayoutParams();
-        tlParams.height = LayoutParams.FILL_PARENT;
-        tlParams.weight = 1;
         for (int hour=0; hour<GlobalData.getDayLessonsCount(); hour++) {
             TableRow row = new TableRow(this);
             row.setBackgroundColor(Color.CYAN);
@@ -38,6 +35,9 @@ public class Main extends Activity {
                 params.setMargins(2, 2, 2, 5);
                 row.addView(v, params);
             }
+            TableLayout.LayoutParams tlParams = new TableLayout.LayoutParams();
+            tlParams.height = LayoutParams.FILL_PARENT;
+            tlParams.weight = 1;
             table.addView(row, tlParams);
         }
     }

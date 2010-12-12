@@ -3,6 +3,7 @@ package kakkun61.sumire;
 import kakkun61.sumire.util.SumireLog;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,10 +36,23 @@ public class LessonDialog {
                 Lesson lesson = new Lesson("授業", "先生", "部屋", 1);
                 GlobalData.setLesson(day, hour, lesson);
                 SumireLog.d("view: " + viewGroup);
-                SumireLog.d("child(0): " + viewGroup.getChildAt(0).getClass().getName());
-                ((TextView)viewGroup.getChildAt(0)).setText(lesson.name);
-                ((TextView)viewGroup.getChildAt(1)).setText(lesson.teacher);
-                ((TextView)viewGroup.getChildAt(2)).setText(lesson.room);
+                TextView name = new TextView(viewGroup.getContext());
+                name.setTextSize(20);
+                name.setText(lesson.name);
+                viewGroup.addView(name);
+                name.setBackgroundColor(Color.GREEN);
+
+                TextView teacher = new TextView(viewGroup.getContext());
+                teacher.setTextSize(20);
+                teacher.setText(lesson.teacher);
+                teacher.setBackgroundColor(Color.GREEN);
+                viewGroup.addView(teacher);
+
+                TextView room = new TextView(viewGroup.getContext());
+                room.setTextSize(20);
+                room.setText(lesson.room);
+                room.setBackgroundColor(Color.GREEN);
+                viewGroup.addView(room);
                 break;
             }
         }

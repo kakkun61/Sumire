@@ -1,11 +1,7 @@
 package kakkun61.sumire;
 
-import java.io.IOException;
-import java.util.List;
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 
 public class GlobalData {
