@@ -9,8 +9,8 @@ package kakkun61.sumire;
 
 public final class R {
     public static final class array {
-        public static final int lesson_dialog_alart_items_edit=0x7f040000;
-        public static final int lesson_dialog_alart_items_new=0x7f040001;
+        public static final int lesson_dialog_alart_items_edit=0x7f050000;
+        public static final int lesson_dialog_alart_items_new=0x7f050001;
     }
     public static final class attr {
     }
@@ -18,14 +18,26 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int talbe=0x7f060000;
+        public static final int edit_lesson_cancel=0x7f060005;
+        public static final int edit_lesson_name=0x7f060000;
+        public static final int edit_lesson_ok=0x7f060004;
+        public static final int edit_lesson_room=0x7f060002;
+        public static final int edit_lesson_series=0x7f060003;
+        public static final int edit_lesson_teacher=0x7f060001;
+        public static final int talbe=0x7f060006;
     }
     public static final class layout {
-        public static final int main=0x7f030000;
+        public static final int editlesson=0x7f030000;
+        public static final int main=0x7f030001;
     }
     public static final class string {
-        public static final int app_name=0x7f050000;
-        public static final int lesson_dialog_alart_title_new=0x7f050001;
-        public static final int negative=0x7f050002;
+        public static final int app_name=0x7f040004;
+        public static final int cancel=0x7f040007;
+        public static final int edit_lesson_name=0x7f040000;
+        public static final int edit_lesson_room=0x7f040002;
+        public static final int edit_lesson_series=0x7f040003;
+        public static final int edit_lesson_teacher=0x7f040001;
+        public static final int lesson_dialog_alart_title_new=0x7f040005;
+        public static final int ok=0x7f040006;
     }
 }

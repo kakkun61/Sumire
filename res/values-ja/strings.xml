@@ -2,5 +2,6 @@
 <resources>
     <string name="app_name">すみれ</string>
     <string name="lesson_dialog_alart_title_new">新規</string>
-    <string name="negative">キャンセル</string>
+    <string name="cancel">キャンセル</string>
+    <string name="ok">完了</string>
 </resources>

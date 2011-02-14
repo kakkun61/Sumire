@@ -13,4 +13,9 @@ public class Lesson {
         this.room = room;
         this.series = series;
     }
+
+    @Override
+    public String toString() {
+        return "Lesson: {" + name + ", " + teacher + ", " + room + ", " + series + "}";
+    }
 }

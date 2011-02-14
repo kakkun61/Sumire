@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="edit_lesson_name">Name</string>
+    <string name="edit_lesson_teacher">Teacher</string>
+    <string name="edit_lesson_room">Room</string>
+    <string name="edit_lesson_series">Period(s)</string>
+</resources>

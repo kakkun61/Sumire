@@ -1,17 +1,25 @@
 package kakkun61.sumire;
 
+import kakkun61.sumire.util.SumireLog;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+// FIXME New... しても更新されない
 public class Main extends Activity {
+    public static final int NEW_LESSON = 0;
+    public static final int EDIT_LESSON = 1;
+    private RightCell[] rightCells;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -19,22 +27,24 @@ public class Main extends Activity {
         GlobalData.createDefaultSharedPreferences(this);
         GlobalData.loadAllData();
         setContentView(R.layout.main);
-        int day = GlobalData.SUNDAY;
+        int day = GlobalData.getShowenDay();
         TableLayout table = (TableLayout)findViewById(R.id.talbe);
-        for (int hour=0; hour<GlobalData.getDayLessonsCount(); hour++) {
+        rightCells = new RightCell[GlobalData.getLessonsADayCount()];
+        for (int hour=0; hour<GlobalData.getLessonsADayCount(); hour++) {
             TableRow row = new TableRow(this);
-            row.setBackgroundColor(Color.CYAN);
+//            row.setBackgroundColor(Color.CYAN);
             TableRow.LayoutParams params = new TableRow.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
             params.gravity = Gravity.CENTER_VERTICAL;
             params.weight = 0;
             params.setMargins(5, 2, 2, 2);
             row.addView(createLeftCell(hour), params);
-            View v = createRightCell(day, hour);
-            if (v != null) {
+            RightCell rc = new RightCell(day, hour);
+            if (rc != null) {
                 params.weight = 1;
                 params.setMargins(2, 2, 2, 5);
-                row.addView(v, params);
+                row.addView(rc, params);
             }
+            rightCells[hour] = rc;
             TableLayout.LayoutParams tlParams = new TableLayout.LayoutParams();
             tlParams.height = LayoutParams.FILL_PARENT;
             tlParams.weight = 1;
@@ -58,7 +68,7 @@ public class Main extends Activity {
         layout.addView(begin, params);
 
         TextView hour = new TextView(this);
-        hour.setText(String.valueOf(day));
+        hour.setText(String.valueOf(day+1));
         hour.setGravity(Gravity.CENTER);
         hour.setBackgroundColor(Color.GREEN);
         params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -76,40 +86,80 @@ public class Main extends Activity {
         return layout;
     }
 
-    // FIXME このあたりにバグのにおい
-    private View createRightCell(int day, int hour) {
-//        SumireLog.d("call Main.createRightCell(" + i + ", " + (lesson==null? "null": lesson.name) +  ")");
-        Lesson lesson = GlobalData.getLesson(day, hour);
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setOnClickListener(new LessonClickListener(lesson, day, hour, layout));
-        layout.setBackgroundColor(Color.BLUE);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        SumireLog.d("Main.onActivityResult(int, int, Intent)");
+        GlobalData.Debug.printLessons();
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == NEW_LESSON || requestCode == EDIT_LESSON) {
+            if (resultCode == RESULT_OK) {
+                SumireLog.d("NEW_LESSON RESULT_OK");
+                int hour = data.getIntExtra("hour", -1);
+                int day = GlobalData.getShowenDay();
+                RightCell rc = rightCells[hour];
+                rc.update();
+                if (requestCode == NEW_LESSON) {
+                    rc.setOnClickListener(new EditLessonClickListener(day, hour, this, rc));
+                }
+            }
+        }
+    }
 
-        if (lesson != null) {
-            TextView name = new TextView(this);
-            name.setTextSize(20);
-            name.setText(lesson.name);
-            layout.addView(name);
-            name.setBackgroundColor(Color.GREEN);
+    private class RightCell extends LinearLayout {
+        private int day;
+        private int hour;
+        private TextView name;
+        private TextView teacher;
+        private TextView room;
 
-            TextView teacher = new TextView(this);
+        public RightCell(int day, int hour) {
+            super(Main.this);
+            this.day = day;
+            this.hour = hour;
+            Lesson lesson = GlobalData.getLesson(day, hour);
+            if (lesson == null)
+                setOnClickListener(new NewLessonClickListener(day, hour, Main.this, this));
+            else
+                setOnClickListener(new EditLessonClickListener(day, hour, Main.this, this));
+//            setBackgroundColor(Color.BLUE);
+            setOrientation(LinearLayout.VERTICAL);
+            ViewGroup.LayoutParams params;
+
+            name = new TextView(Main.this);
+            name.setTextSize(23);
+//            name.setBackgroundColor(Color.GREEN);
+            params = new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            addView(name, params);
+
+            teacher = new TextView(Main.this);
             teacher.setTextSize(20);
-            teacher.setText(lesson.teacher);
-            teacher.setBackgroundColor(Color.GREEN);
-            layout.addView(teacher);
+//            teacher.setBackgroundColor(Color.GREEN);
+            addView(teacher, params);
 
-            TextView room = new TextView(this);
+            room = new TextView(Main.this);
             room.setTextSize(20);
-            room.setText(lesson.room);
-            room.setBackgroundColor(Color.GREEN);
-            layout.addView(room);
+//            room.setBackgroundColor(Color.GREEN);
+            addView(room, params);
+
+            if (lesson != null) {
+                name.setText(lesson.name);
+                teacher.setText(lesson.teacher);
+                room.setText(lesson.room);
+            }
         }
 
-        return layout;
+       public void update() {
+            SumireLog.d("Main.update()");
+            Lesson lesson = GlobalData.getLesson(day, hour);
 
-//        View v = new View(this);
-//        v.setOnClickListener(new LessonClickListener(null, day, hour, null));
-//        v.setBackgroundColor(Color.GREEN);
-//        return v;
+            if (lesson != null) {
+                SumireLog.d("update: " + lesson);
+                name.setText(lesson.name);
+                teacher.setText(lesson.teacher);
+                room.setText(lesson.room);
+            } else {
+                removeAllViews();
+            }
+        }
     }
 }

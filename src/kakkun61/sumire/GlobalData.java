@@ -1,5 +1,6 @@
 package kakkun61.sumire;
 
+import kakkun61.sumire.util.SumireLog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -7,7 +8,7 @@ import android.preference.PreferenceManager;
 public class GlobalData {
     private static SharedPreferences prefs;
     public static final int DEFAULT_DAY_LESSONS_COUNT = 5;
-    private static int dayLessonsCount;
+    private static int lessonsADayCount;
     public static final int SUNDAY    = 0;
     public static final int MONDAY    = 1;
     public static final int TUESDAY   = 2;
@@ -20,25 +21,19 @@ public class GlobalData {
      */
     private static boolean[] businessDay;
     /**
-     * 授業を表す配列。7×{@link #dayLessonsCount} の大きさ。
+     * 授業を表す配列。7×{@link #lessonsADayCount} の大きさ。
      */
     private static Lesson[][] lessons;
     /**
      * 表示している曜日
      */
-    private static int showingDay;
+    private static int showenDay;
 
     static {
-        dayLessonsCount = DEFAULT_DAY_LESSONS_COUNT;
+        // 仮
+        lessonsADayCount = DEFAULT_DAY_LESSONS_COUNT;
         businessDay = new boolean[] { true, true, true, true, true, true, false };
         lessons = new Lesson[7][];
-        lessons[0] = new Lesson[] {
-                new Lesson("制御工学", "真田", "B11 324", 1),
-                null,
-                new Lesson("パワーエレクトロニクス", "森本", "B11 324", 1),
-                null,
-                null };
-        showingDay = MONDAY;
     }
 
     /**
@@ -54,20 +49,26 @@ public class GlobalData {
         return lessons[day][hour];
     }
 
-    public static void setLesson(int day, int hour, Lesson lesson) {
+    public static void putLesson(int day, int hour, Lesson lesson) {
         lessons[day][hour] = lesson;
         SharedPreferences.Editor edit = prefs.edit();
-        if (lessons[day][hour] != null) {
-            edit.putString("lessons" + day + hour + "name", lessons[day][hour].name);
-            edit.putString("lessons" + day + hour + "teacher", lessons[day][hour].teacher);
-            edit.putString("lessons" + day + hour + "room", lessons[day][hour].room);
-            edit.putInt("lessons" + day + hour + "series", lessons[day][hour].series);
+        if (lesson != null) {
+            edit.putString("lessons" + day + hour + "name", lesson.name);
+            edit.putString("lessons" + day + hour + "teacher", lesson.teacher);
+            edit.putString("lessons" + day + hour + "room", lesson.room);
+            edit.putInt("lessons" + day + hour + "series", lesson.series);
+        } else {
+            edit.remove("lessons" + day + hour + "name");
+            edit.remove("lessons" + day + hour + "teacher");
+            edit.remove("lessons" + day + hour + "room");
+            edit.remove("lessons" + day + hour + "series");
         }
         edit.commit();
+        SumireLog.d("save: {(" + day + ", " + hour + "), " + lesson + "}");
     }
 
     /**
-     * 日・月・火の順
+     * 日・月・火…の順
      * @return 
      */
     public static boolean[] getBusinessDay() {
@@ -86,42 +87,43 @@ public class GlobalData {
         }
     }
 
-    public static int getShowingDay() {
-        return showingDay;
+    public static int getShowenDay() {
+        return showenDay;
     }
 
-    public static void setShowingDay(int showingDay) {
-        GlobalData.showingDay = showingDay;
+    public static void setShowenDay(int showingDay) {
+        GlobalData.showenDay = showingDay;
     }
 
-    public static void setDayLessonsCount(int dayLessonsCount) {
-        GlobalData.dayLessonsCount = dayLessonsCount;
+    public static void setLessonsADayCount(int dayLessonsCount) {
+        GlobalData.lessonsADayCount = dayLessonsCount;
         prefs.edit().putInt("dayLessonsCount", dayLessonsCount).commit();
         
     }
 
-    public static int getDayLessonsCount() {
-        return dayLessonsCount;
+    public static int getLessonsADayCount() {
+        return lessonsADayCount;
     }
 
     /**
      * Call after {@link GlobalData#createDefaultSharedPreferences(Context)}.
      */
     public static void loadAllData() {
-        dayLessonsCount = prefs.getInt("dayLessonsCount", DEFAULT_DAY_LESSONS_COUNT);
-        showingDay = prefs.getInt("showingDay", MONDAY);
+        lessonsADayCount = prefs.getInt("dayLessonsCount", DEFAULT_DAY_LESSONS_COUNT);
+        showenDay = prefs.getInt("showingDay", MONDAY);
 
-        for (int day=0; day<7; day++) {
-            if (day == SUNDAY || day == SATURDAY)
-                prefs.getBoolean("businessDay" + day, false);
-            else
-                prefs.getBoolean("businessDay" + day, true);
-        }
+        // XXX ?? 2011.02.13
+//        for (int day=0; day<7; day++) {
+//            if (day == SUNDAY || day == SATURDAY)
+//                prefs.getBoolean("businessDay" + day, false);
+//            else
+//                prefs.getBoolean("businessDay" + day, true);
+//        }
 
         lessons = new Lesson[7][];
         for (int day=0; day<7; day++) {
-            lessons[day] = new Lesson[dayLessonsCount];
-            for (int hour=0; hour<dayLessonsCount; hour++) {
+            lessons[day] = new Lesson[lessonsADayCount];
+            for (int hour=0; hour<lessonsADayCount; hour++) {
                 String name = prefs.getString("lessons" + day + hour + "name", null);
                 if (name == null)
                     continue;
@@ -132,6 +134,49 @@ public class GlobalData {
                         prefs.getInt("lessons" + day + hour + "series", 0)
                 );
             }
+        }
+    }
+
+    public static class Debug {
+        private Debug(){}
+
+        public static void printLessons() {
+            SumireLog.d("Lessons: {");
+            for (int day=0; day<7; day++) {
+                StringBuilder sb = new StringBuilder();
+                switch (day) {
+                case SUNDAY:
+                    sb.append("\tSunday");
+                    break;
+                case MONDAY:
+                    sb.append("\tMonday");
+                    break;
+                case TUESDAY:
+                    sb.append("\tTuesday");
+                    break;
+                case WEDNESDAY:
+                    sb.append("\tWednesday");
+                    break;
+                case THURSDAY:
+                    sb.append("\tThursday");
+                    break;
+                case FRIDAY:
+                    sb.append("\tFriday");
+                    break;
+                case SATURDAY:
+                    sb.append("\tSaturday");
+                    break;
+                }
+                if (day == showenDay)
+                    sb.append(" *");
+                sb.append(" {");
+                SumireLog.d(sb.toString());
+                for (int hour=0; hour<lessonsADayCount; hour++) {
+                    SumireLog.d("\t\t" + lessons[day][hour]);
+                }
+                SumireLog.d("\t}");
+            }
+            SumireLog.d("}");
         }
     }
 }

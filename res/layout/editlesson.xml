@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:orientation="vertical">
+  <ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1">
+    <TableLayout
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:stretchColumns="1"
+      android:padding="5dip">
+      <TableRow>
+        <TextView android:text="@string/edit_lesson_name"
+          android:layout_width="wrap_content" android:layout_height="wrap_content"
+          android:layout_gravity="right|center_vertical" />
+        <EditText
+          android:id="@+id/edit_lesson_name"
+          android:layout_width="fill_parent" android:layout_height="wrap_content"
+          android:layout_marginLeft="10dip" />
+      </TableRow>
+      <TableRow>
+        <TextView
+          android:text="@string/edit_lesson_teacher"
+          android:layout_width="wrap_content" android:layout_height="wrap_content"
+          android:layout_gravity="right|center_vertical" />
+        <EditText
+          android:id="@+id/edit_lesson_teacher"
+          android:layout_width="fill_parent" android:layout_height="wrap_content"
+          android:layout_marginLeft="10dip" />
+      </TableRow>
+      <TableRow>
+        <TextView
+          android:text="@string/edit_lesson_room"
+          android:layout_width="wrap_content" android:layout_height="wrap_content"
+          android:layout_gravity="right|center_vertical" />
+        <EditText android:id="@+id/edit_lesson_room"
+          android:layout_width="fill_parent" android:layout_height="wrap_content"
+          android:layout_marginLeft="10dip" />
+      </TableRow>
+      <TableRow>
+        <TextView
+          android:text="@string/edit_lesson_series"
+          android:layout_width="wrap_content" android:layout_height="wrap_content"
+          android:layout_gravity="right|center_vertical" />
+        <EditText android:id="@+id/edit_lesson_series"
+          android:layout_width="fill_parent" android:layout_height="wrap_content"
+          android:layout_marginLeft="10dip"
+          android:inputType="number" />
+      </TableRow>
+    </TableLayout>
+  </ScrollView>
+  <LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_horizontal">
+    <Button
+      android:id="@+id/edit_lesson_ok"
+      android:text="@string/ok"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1" />
+    <Button
+      android:id="@+id/edit_lesson_cancel"
+      android:text="@string/cancel"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1" />
+  </LinearLayout>
+</LinearLayout>
