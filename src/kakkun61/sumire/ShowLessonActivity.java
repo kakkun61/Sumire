@@ -14,8 +14,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-// FIXME New... しても更新されない
-public class Main extends Activity {
+public class ShowLessonActivity extends Activity {
     public static final int NEW_LESSON = 0;
     public static final int EDIT_LESSON = 1;
     private RightCell[] rightCells;
@@ -29,6 +28,7 @@ public class Main extends Activity {
         setContentView(R.layout.main);
         int day = GlobalData.getShowenDay();
         TableLayout table = (TableLayout)findViewById(R.id.talbe);
+        table.setColumnStretchable(1, true);
         rightCells = new RightCell[GlobalData.getLessonsADayCount()];
         for (int hour=0; hour<GlobalData.getLessonsADayCount(); hour++) {
             TableRow row = new TableRow(this);
@@ -57,20 +57,22 @@ public class Main extends Activity {
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setGravity(Gravity.CENTER_HORIZONTAL);
-        layout.setBackgroundColor(Color.BLUE);
+//        layout.setBackgroundColor(Color.BLUE);
+        layout.setBackgroundColor(Color.WHITE);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
         TextView begin = new TextView(this);
         begin.setText("12:55");
         begin.setGravity(Gravity.CENTER);
-        begin.setBackgroundColor(Color.GREEN);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+//        begin.setBackgroundColor(Color.GREEN);
         params.weight = 0;
         layout.addView(begin, params);
 
         TextView hour = new TextView(this);
         hour.setText(String.valueOf(day+1));
+        hour.setTextSize(30);
         hour.setGravity(Gravity.CENTER);
-        hour.setBackgroundColor(Color.GREEN);
+//        hour.setBackgroundColor(Color.GREEN);
         params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.weight = 1;
         layout.addView(hour, params);
@@ -78,7 +80,7 @@ public class Main extends Activity {
         TextView end = new TextView(this);
         end.setText("14:25");
         end.setGravity(Gravity.CENTER);
-        end.setBackgroundColor(Color.GREEN);
+//        end.setBackgroundColor(Color.GREEN);
         params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.weight = 0;
         layout.addView(end, params);
@@ -113,30 +115,30 @@ public class Main extends Activity {
         private TextView room;
 
         public RightCell(int day, int hour) {
-            super(Main.this);
+            super(ShowLessonActivity.this);
             this.day = day;
             this.hour = hour;
             Lesson lesson = GlobalData.getLesson(day, hour);
             if (lesson == null)
-                setOnClickListener(new NewLessonClickListener(day, hour, Main.this, this));
+                setOnClickListener(new NewLessonClickListener(day, hour, ShowLessonActivity.this, this));
             else
-                setOnClickListener(new EditLessonClickListener(day, hour, Main.this, this));
+                setOnClickListener(new EditLessonClickListener(day, hour, ShowLessonActivity.this, this));
 //            setBackgroundColor(Color.BLUE);
             setOrientation(LinearLayout.VERTICAL);
             ViewGroup.LayoutParams params;
 
-            name = new TextView(Main.this);
+            name = new TextView(ShowLessonActivity.this);
             name.setTextSize(23);
 //            name.setBackgroundColor(Color.GREEN);
             params = new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             addView(name, params);
 
-            teacher = new TextView(Main.this);
+            teacher = new TextView(ShowLessonActivity.this);
             teacher.setTextSize(20);
 //            teacher.setBackgroundColor(Color.GREEN);
             addView(teacher, params);
 
-            room = new TextView(Main.this);
+            room = new TextView(ShowLessonActivity.this);
             room.setTextSize(20);
 //            room.setBackgroundColor(Color.GREEN);
             addView(room, params);

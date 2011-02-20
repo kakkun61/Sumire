@@ -53,25 +53,37 @@ public class EditLessonActivity extends Activity {
             int hour = request.getIntExtra("hour", -1);
             int day = GlobalData.getShowenDay();
             Lesson lesson = GlobalData.getLesson(day, hour);
-            if (lesson == null){
-                SumireLog.d("lesson == null");
-                lesson = new Lesson(
-                        name.getText().toString(),
-                        teacher.getText().toString(),
-                        room.getText().toString(),
-                        Integer.parseInt(series.getText().toString()));
-                GlobalData.putLesson(day, hour, lesson);
-            } else {
-                SumireLog.d("lesson != null");
-                lesson.name = name.getText().toString();
-                lesson.teacher = teacher.getText().toString();
-                lesson.room = room.getText().toString();
-                lesson.series = Integer.parseInt(series.getText().toString());
+            String nameStr    = name.getText().toString();
+            String teacherStr = teacher.getText().toString();
+            String roomStr    = room.getText().toString();
+            String seriesStr  = series.getText().toString();
+            if (nameStr.length() == 0 || teacherStr.length() == 0 || roomStr.length() == 0 || seriesStr.length() == 0) {
+                finish();
             }
-            Intent result = new Intent();
-            result.putExtra("hour", hour);
-            setResult(RESULT_OK, result);
-            finish();
+            try {
+                if (lesson == null){
+                    SumireLog.d("lesson == null");
+                    lesson = new Lesson(
+                            name.getText().toString(),
+                            teacher.getText().toString(),
+                            room.getText().toString(),
+                            Integer.parseInt(series.getText().toString()));
+                    GlobalData.putLesson(day, hour, lesson);
+                } else {
+                    SumireLog.d("lesson != null");
+                    lesson.name = name.getText().toString();
+                    lesson.teacher = teacher.getText().toString();
+                    lesson.room = room.getText().toString();
+                    lesson.series = Integer.parseInt(series.getText().toString());
+                }
+                Intent result = new Intent();
+                result.putExtra("hour", hour);
+                setResult(RESULT_OK, result);
+                finish();
+            } catch (NumberFormatException e) {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
         }
     }
 

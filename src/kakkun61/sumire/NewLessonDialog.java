@@ -21,7 +21,7 @@ public class NewLessonDialog extends LessonDialog {
                 Intent intent = new Intent();
                 intent.setClass(viewGroup.getContext(), EditLessonActivity.class);
                 intent.putExtra("hour", hour);
-                activity.startActivityForResult(intent, Main.NEW_LESSON);
+                activity.startActivityForResult(intent, ShowLessonActivity.NEW_LESSON);
                 break;
             }
         }

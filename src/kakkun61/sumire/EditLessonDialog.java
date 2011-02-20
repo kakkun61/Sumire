@@ -22,7 +22,7 @@ public class EditLessonDialog extends LessonDialog {
                 Intent intent = new Intent();
                 intent.setClass(viewGroup.getContext(), EditLessonActivity.class);
                 intent.putExtra("hour", hour);
-                activity.startActivityForResult(intent, Main.EDIT_LESSON);
+                activity.startActivityForResult(intent, ShowLessonActivity.EDIT_LESSON);
                 break;
             case 1: // 消去
                 viewGroup.removeAllViews();
