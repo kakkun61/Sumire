@@ -30,21 +30,21 @@ public class ShowLessonActivity extends Activity {
         TableLayout table = (TableLayout)findViewById(R.id.talbe);
         table.setColumnStretchable(1, true);
         rightCells = new RightCell[GlobalData.getLessonsADayCount()];
-        for (int hour=0; hour<GlobalData.getLessonsADayCount(); hour++) {
+        for (int period = 0; period<GlobalData.getLessonsADayCount(); period++) {
             TableRow row = new TableRow(this);
 //            row.setBackgroundColor(Color.CYAN);
             TableRow.LayoutParams params = new TableRow.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
             params.gravity = Gravity.CENTER_VERTICAL;
             params.weight = 0;
             params.setMargins(5, 2, 2, 2);
-            row.addView(createLeftCell(hour), params);
-            RightCell rc = new RightCell(day, hour);
+            row.addView(createLeftCell(period), params);
+            RightCell rc = new RightCell(day, period);
             if (rc != null) {
                 params.weight = 1;
                 params.setMargins(2, 2, 2, 5);
                 row.addView(rc, params);
             }
-            rightCells[hour] = rc;
+            rightCells[period] = rc;
             TableLayout.LayoutParams tlParams = new TableLayout.LayoutParams();
             tlParams.height = LayoutParams.FILL_PARENT;
             tlParams.weight = 1;
